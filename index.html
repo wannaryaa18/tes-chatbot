@@ -200,18 +200,18 @@
             'Blockchain': [
                 'Bagaimana cara kerja blockchain?',
                 'Apa itu desentralisasi?',
-                'Apa itu "gas fee"?',
+                'Apa itu gas fee?',
                 'Apa itu Layer 2?'
             ],
             'NFT': [
                 'Bagaimana cara membuat NFT?',
-                'Apa itu "minting"?',
+                'Apa itu minting?',
                 'Apa kegunaan NFT selain seni?',
                 'Di mana orang menjual NFT?'
             ],
             'DeFi': [
-                'Apa itu "yield farming"?',
-                'Apa itu "liquidity pool"?',
+                'Apa itu DeFi?',
+                'Apa itu liquidity pool?',
                 'Apa resiko pinjam meminjam di DeFi?',
                 'Contoh aplikasi DeFi?'
             ],
@@ -241,14 +241,14 @@
             ],
              'Wallet Crypto': [
                 'Bagaimana cara mengamankan wallet?',
-                'Apa itu "seed phrase"?',
-                'Apa bedanya "hot" vs "cold" wallet?',
+                'Apa itu seed phrase?',
+                'Apa bedanya hot vs cold wallet?',
                 'Contoh aplikasi wallet?'
             ],
             'Coin vs Token': [
                 'Apa contoh Coin?',
                 'Apa contoh Token?',
-                'Apa itu "tokenomics"?',
+                'Apa itu tokenomics?',
                 'Bagaimana token dibuat?'
             ]
         };
@@ -558,8 +558,8 @@
                 let newSuggestions = [];
                 let uniqueRelevant = [...new Set(relevantSuggestions)];
                 uniqueRelevant = uniqueRelevant.filter(suggestion => {
-                     const lowerSuggestion = suggestion.toLowerCase();
-                     return lowerSuggestion !== lowerLastQuestion && !lowerCurrentSuggestions.includes(lowerSuggestion);
+                         const lowerSuggestion = suggestion.toLowerCase();
+                         return lowerSuggestion !== lowerLastQuestion && !lowerCurrentSuggestions.includes(lowerSuggestion);
                 });
 
                 newSuggestions.push(...uniqueRelevant);
@@ -649,6 +649,11 @@ ATURAN GAYA BICARA (SANGAT PENTING):
                     botReply = botReply.replace(/^(#+\s*)/gm, ''); 
                     botReply = botReply.replace(/Analogi:/gi, '');
                     botReply = botReply.replace(/Contoh:/gi, '');
+
+                    // --- PERUBAHAN 1 DITAMBAHKAN DI SINI ---
+                    // Mengubah newline (\n) menjadi tag <br /> agar HTML bisa membacanya
+                    botReply = botReply.replace(/\n/g, '<br />');
+                    // ----------------------------------------
 
                     let visual = null;
                     if (botReply && !botReply.toLowerCase().includes("hmm, pertanyaan itu sepertinya jauh banget")) {
@@ -799,9 +804,16 @@ ATURAN GAYA BICARA (SANGAT PENTING):
                                             </div>
                                         )}
                                         <div className={`max-w-[85%] ${msg.role === 'user' ? 'bg-gradient-to-br from-purple-500 via-purple-600 to-blue-600 text-white shadow-lg' : 'bg-white border-2 border-gray-100 shadow-md'} rounded-3xl p-5 hover:shadow-xl transition-all`}>
+                                            
+                                            {/* --- PERUBAHAN 2 DI BLOK INI --- */}
                                             <div className={`text-sm leading-relaxed ${msg.role === 'user' ? 'text-white font-medium' : 'text-gray-800'}`}>
-                                                {msg.content}
+                                                {msg.role === 'user' 
+                                                    ? msg.content 
+                                                    : <div dangerouslySetInnerHTML={{ __html: msg.content }} />
+                                                }
                                             </div>
+                                            {/* ------------------------------- */}
+
                                             {msg.visual && msg.visual}
                                         </div>
                                         {msg.role === 'user' && (
