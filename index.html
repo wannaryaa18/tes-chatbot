@@ -276,9 +276,92 @@
                 scrollToBottom();
             }, [messages]);
 
+            // ==================================================================
+            // === 🚀 PENAMBAHAN VISUAL BARU DIMULAI DARI SINI 🚀 ===
+            // ==================================================================
+
+            // --- 1. Definisikan Tema Warna ---
+            const themes = {
+                purple: { bg: 'bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50', border: 'border-purple-200', iconBg: 'bg-gradient-to-br from-purple-500 to-indigo-600' },
+                green: { bg: 'bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50', border: 'border-green-200', iconBg: 'bg-gradient-to-br from-green-500 to-emerald-600' },
+                red: { bg: 'bg-gradient-to-br from-red-50 via-pink-50 to-rose-50', border: 'border-red-200', iconBg: 'bg-gradient-to-br from-red-500 to-pink-600' },
+                yellow: { bg: 'bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50', border: 'border-yellow-200', iconBg: 'bg-gradient-to-br from-yellow-500 to-amber-600' },
+                cyan: { bg: 'bg-gradient-to-br from-cyan-50 via-sky-50 to-blue-50', border: 'border-cyan-200', iconBg: 'bg-gradient-to-br from-cyan-500 to-sky-600' }
+            };
+            
+            // --- 2. Komponen Visual Generik (Bisa Dipakai Ulang) ---
+            const GenericVisual = ({ icon, title, description, colorTheme }) => {
+                 const theme = colorTheme || themes.purple; // Default ke ungu jika tema tidak diset
+                 return (
+                     <div className={`${theme.bg} p-6 rounded-2xl border-2 ${theme.border} mt-4 shadow-lg`}>
+                        <div className="flex items-center gap-3 mb-5">
+                            <div className={`w-10 h-10 ${theme.iconBg} rounded-xl flex items-center justify-center shadow-md floating`}>
+                                <span className="text-white text-xl">{icon}</span>
+                            </div>
+                            <h3 className="font-bold text-gray-800 text-lg">{title}</h3>
+                        </div>
+                        <div className="bg-white p-5 rounded-2xl border-2 border-gray-200 shadow-inner">
+                            <p className="text-sm text-gray-700 leading-relaxed">{description}</p>
+                        </div>
+                    </div>
+                );
+            };
+
+            // --- 3. Map untuk 43 Diagram Generik ---
+            const visualMap = {
+                'dapp': { icon: '📱', title: 'dApp (Aplikasi Terdesentralisasi)', description: 'Seperti aplikasi biasa (contoh: Twitter), tapi berjalan di atas blockchain. Tidak ada satu perusahaan yang mengontrolnya.', theme: themes.purple },
+                'dao': { icon: '🏛️', title: 'DAO (Organisasi Otonomi)', description: 'Sebuah organisasi atau "klub" yang diatur oleh kode dan voting. Anggota dengan token bisa ikut menentukan arah organisasi.', theme: themes.green },
+                'defi': { icon: '💸', title: 'DeFi (Keuangan Terdesentralisasi)', description: 'Layanan keuangan (pinjam, tabung, tukar) yang dibangun di atas blockchain, tanpa perlu bank tradisional.', theme: themes.cyan },
+                'smart contract': { icon: '📜', title: 'Smart Contract', description: 'Sebuah "kontrak" atau perjanjian digital yang ditulis dalam kode. Perjanjian ini otomatis berjalan jika syaratnya terpenuhi.', theme: themes.yellow },
+                'layer 2': { icon: 'LAYER 2', title: 'Layer 2 Solution', description: 'Sebuah "jalan tol" yang dibangun di atas blockchain utama (Layer 1) untuk membuat transaksi lebih cepat dan murah.', theme: themes.red },
+                'gas fee': { icon: '⛽', title: 'Gas Fee', description: 'Biaya "bensin" yang kamu bayar untuk melakukan transaksi atau menjalankan smart contract di blockchain.', theme: themes.yellow },
+                'metaverse': { icon: '🕶️', title: 'Metaverse', description: 'Dunia virtual 3D di mana orang bisa berkumpul, bermain, dan memiliki aset digital (seringkali sebagai NFT).', theme: themes.purple },
+                'tokenomics': { icon: '📊', title: 'Tokenomics', description: 'Ilmu ekonomi di balik sebuah token. Ini mengatur suplai, distribusi, dan kegunaan token tersebut.', theme: themes.cyan },
+                'seed phrase': { icon: '🤫', title: 'Seed Phrase', description: 'Kumpulan 12 atau 24 kata rahasia yang merupakan "kunci master" dari wallet crypto kamu. JANGAN PERNAH bagikan ini!', theme: themes.red },
+                'hot wallet': { icon: '📱', title: 'Hot Wallet', description: 'Wallet crypto yang terhubung ke internet (seperti aplikasi di HP atau ekstensi browser). Mudah dipakai, tapi lebih rentan.', theme: themes.yellow },
+                'cold wallet': { icon: '🧊', title: 'Cold Wallet', description: 'Wallet crypto yang tidak terhubung internet (seperti USB). Sangat aman untuk menyimpan aset jangka panjang.', theme: themes.cyan },
+                'desentralisasi': { icon: '🌐', title: 'Desentralisasi', description: 'Artinya, tidak ada satu pihak (seperti pemerintah atau perusahaan) yang punya kontrol penuh. Kekuatan disebar ke banyak pengguna.', theme: themes.green },
+                'bitcoin': { icon: '₿', title: 'Bitcoin', description: 'Mata uang crypto pertama dan paling terkenal. Diciptakan sebagai "emas digital" dan sistem pembayaran peer-to-peer.', theme: themes.yellow },
+                'ethereum': { icon: 'Ξ', title: 'Ethereum', description: 'Bukan cuma koin, Ethereum adalah platform untuk membangun dApp dan smart contract. Koinnya disebut Ether (ETH).', theme: themes.purple },
+                'altcoin': { icon: '🪙', title: 'Altcoin', description: 'Singkatan dari "Alternative Coin". Ini adalah sebutan untuk semua cryptocurrency selain Bitcoin.', theme: themes.green },
+                'stablecoin': { icon: '💵', title: 'Stablecoin', description: 'Jenis token yang harganya "dipatok" ke aset stabil, biasanya Dolar AS (seperti USDT atau USDC). Nilainya 1:1 dengan dolar.', theme: themes.cyan },
+                'minting': { icon: '✨', title: 'Minting (NFT)', description: 'Proses "mencetak" atau mendaftarkan sebuah karya digital (gambar, musik) ke blockchain untuk menjadikannya NFT.', theme: themes.purple },
+                'marketplace': { icon: '🛒', title: 'NFT Marketplace', description: 'Tempat jual-beli NFT, seperti "Tokopedia" atau "Shopee" tapi khusus untuk aset digital. Contoh: OpenSea.', theme: themes.cyan },
+                'liquidity pool': { icon: '🏊', title: 'Liquidity Pool (DeFi)', description: 'Sekumpulan token yang "dikunci" dalam smart contract di DeFi. Ini dipakai untuk memfasilitasi pertukaran token.', theme: themes.green },
+                'yield farming': { icon: '🧑‍🌾', title: 'Yield Farming (DeFi)', description: 'Cara untuk "menanam" crypto kamu di protokol DeFi untuk mendapatkan "panen" berupa token atau bunga tambahan.', theme: themes.yellow },
+                'airdrop': { icon: '🪂', title: 'Airdrop', description: 'Distribusi token gratis ke banyak alamat wallet. Biasanya sebagai strategi marketing untuk proyek baru.', theme: themes.purple },
+                'hash': { icon: '🔑', title: 'Hash', description: 'Sidik jari digital yang unik. Setiap blok di blockchain punya hash-nya sendiri, yang mengamankan data di dalamnya.', theme: themes.red },
+                'node': { icon: '🖥️', title: 'Node (Simpul)', description: 'Komputer yang terhubung ke jaringan blockchain. Node menyimpan dan memvalidasi salinan dari seluruh riwayat transaksi.', theme: themes.cyan },
+                'consensus': { icon: '🤝', title: 'Consensus Mechanism', description: 'Aturan main yang disepakati oleh jaringan (seperti Proof-of-Work atau Proof-of-Stake) untuk memvalidasi transaksi.', theme: themes.green },
+                'p2p': { icon: '🧑‍🤝‍🧑', title: 'Peer-to-Peer (P2P)', description: 'Jaringan di mana transaksi terjadi langsung antar pengguna, tanpa perantara seperti bank atau server pusat.', theme: themes.purple },
+                'solidity': { icon: '👨‍💻', title: 'Solidity', description: 'Bahasa pemrograman paling populer yang digunakan untuk menulis smart contract, terutama di blockchain Ethereum.', theme: themes.yellow },
+                'gas limit': { icon: '⛽', title: 'Gas Limit', description: 'Jumlah "bensin" maksimum yang kamu rela bayar untuk sebuah transaksi. Ini mencegah error yang menghabiskan semua koinmu.', theme: themes.red },
+                'gwei': { icon: '💧', title: 'Gwei', description: 'Satuan kecil dari Ether (ETH) yang digunakan untuk mengukur harga gas fee. Seperti "sen" untuk "rupiah".', theme: themes.cyan },
+                'private key': { icon: '🗝️', title: 'Private Key', description: 'Kunci rahasia (seperti password) yang membuktikan kepemilikan atas wallet-mu. JANGAN PERNAH bagikan ini.', theme: themes.red },
+                'public key': { icon: '📬', title: 'Public Key / Address', description: 'Alamat wallet-mu yang bisa kamu bagikan ke orang lain untuk menerima koin. Seperti "nomor rekening" bank.', theme: themes.green },
+                'oracle': { icon: '🔮', title: 'Blockchain Oracle', description: 'Layanan pihak ketiga yang menyediakan data dari "dunia nyata" (seperti cuaca atau harga saham) ke dalam smart contract.', theme: themes.purple },
+                'halving': { icon: '✂️', title: 'Bitcoin Halving', description: 'Peristiwa yang terjadi sekitar 4 tahun sekali di mana imbalan (reward) untuk mining Bitcoin dipotong setengah.', theme: themes.yellow },
+                'hard fork': { icon: '🍴', title: 'Hard Fork', description: 'Perubahan besar pada aturan blockchain yang tidak kompatibel dengan versi lama. Ini bisa membelah blockchain menjadi dua.', theme: themes.red },
+                'soft fork': { icon: '🥄', title: 'Soft Fork', description: 'Perubahan pada aturan blockchain yang masih kompatibel dengan versi lama. Seperti update software biasa.', theme: themes.green },
+                'kyc': { icon: '🆔', title: 'KYC (Know Your Customer)', description: 'Proses di mana platform (biasanya CEX) memverifikasi identitas kamu (pakai KTP/SIM) untuk mematuhi regulasi.', theme: themes.cyan },
+                'cex': { icon: '🏦', title: 'CEX (Centralized Exchange)', description: 'Platform jual-beli crypto yang terpusat, seperti bank. Contoh: Binance, Tokocrypto, Indodax.', theme: themes.cyan },
+                'dex': { icon: '⚖️', title: 'DEX (Decentralized Exchange)', description: 'Platform jual-beli crypto yang berjalan di atas blockchain (pakai smart contract), tidak ada bos pusat. Contoh: Uniswap.', theme: themes.purple },
+                'fud': { icon: '😨', title: 'FUD (Fear, Uncertainty, Doubt)', description: 'Istilah untuk penyebaran berita negatif atau rumor untuk membuat orang panik dan menjual aset mereka.', theme: themes.red },
+                'fomo': { icon: '🤩', title: 'FOMO (Fear Of Missing Out)', description: 'Rasa takut ketinggalan. Ini sering membuat orang membeli koin saat harganya sudah tinggi karena ikut-ikutan.', theme: themes.green },
+                'hodl': { icon: '🙌', title: 'HODL', description: 'Berasal dari salah ketik "Hold". Artinya menyimpan crypto kamu dalam jangka waktu lama, tidak peduli harga naik atau turun.', theme: themes.yellow },
+                'shill': { icon: '📢', title: 'Shill', description: 'Tindakan mempromosikan sebuah koin atau proyek secara berlebihan (seringkali karena dibayar) agar orang lain ikut membeli.', theme: themes.red },
+                'rug pull': { icon: '🏃‍♂️', title: 'Rug Pull', description: 'Penipuan di mana pembuat proyek crypto tiba-tiba kabur membawa semua uang investor.', theme: themes.red },
+                'dyor': { icon: '🧐', title: 'DYOR (Do Your Own Research)', description: 'Saran untuk selalu melakukan riset sendiri sebelum berinvestasi di proyek crypto apapun.', theme: themes.green }
+            };
+
+
+            // --- 4. Fungsi generateVisual yang Diperbarui ---
             const generateVisual = (topic) => {
                 const lowerTopic = topic.toLowerCase();
                 
+                // --- BAGIAN 1: 7 Diagram Kustom (Prioritas) ---
+                // (Ini adalah 7 diagram kustom Anda, tidak diubah)
+
                 if (lowerTopic.includes('blockchain') || lowerTopic.includes('block chain')) {
                     return (
                         <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-6 rounded-2xl border-2 border-blue-200 mt-4 shadow-lg">
@@ -490,10 +573,27 @@
                         </div>
                     );
                 }
+                
+                // --- BAGIAN 2: 43 Diagram Generik ---
+                // Loop melalui map untuk mencari keyword yang cocok
+                for (const keyword in visualMap) {
+                    if (lowerTopic.includes(keyword)) {
+                        const data = visualMap[keyword];
+                        // Jika cocok, kembalikan komponen GenericVisual dengan data yang sesuai
+                        return <GenericVisual icon={data.icon} title={data.title} description={data.description} colorTheme={data.theme} />;
+                    }
+                }
 
+                // --- BAGIAN 3: Fallback ---
+                // Jika tidak ada visual kustom ATAU generik yang cocok
                 return null;
             };
-            
+
+            // ==================================================================
+            // === 🚀 PENAMBAHAN VISUAL BARU BERAKHIR DI SINI 🚀 ===
+            // ==================================================================
+
+
             const shuffleArray = (array) => {
                 const newArray = [...array];
                 let currentIndex = newArray.length;
@@ -650,13 +750,12 @@ ATURAN GAYA BICARA (SANGAT PENTING):
                     botReply = botReply.replace(/Analogi:/gi, '');
                     botReply = botReply.replace(/Contoh:/gi, '');
 
-                    // --- PERUBAHAN 1 DITAMBAHKAN DI SINI ---
                     // Mengubah newline (\n) menjadi tag <br /> agar HTML bisa membacanya
                     botReply = botReply.replace(/\n/g, '<br />');
-                    // ----------------------------------------
 
                     let visual = null;
                     if (botReply && !botReply.toLowerCase().includes("hmm, pertanyaan itu sepertinya jauh banget")) {
+                         // generateVisual sekarang akan mengecek 50 topik
                          visual = generateVisual(userMessage);
                     }
                     
@@ -692,7 +791,7 @@ ATURAN GAYA BICARA (SANGAT PENTING):
                         {
                             role: 'assistant',
                             content: `Oke! Mari kita fokus membahas ${topic}. Apa yang ingin kamu ketahui pertama?`,
-                            visual: generateVisual(topic)
+                            visual: generateVisual(topic) // Tampilkan visual saat ganti topik
                         }
                     ]);
                     
@@ -805,15 +904,14 @@ ATURAN GAYA BICARA (SANGAT PENTING):
                                         )}
                                         <div className={`max-w-[85%] ${msg.role === 'user' ? 'bg-gradient-to-br from-purple-500 via-purple-600 to-blue-600 text-white shadow-lg' : 'bg-white border-2 border-gray-100 shadow-md'} rounded-3xl p-5 hover:shadow-xl transition-all`}>
                                             
-                                            {/* --- PERUBAHAN 2 DI BLOK INI --- */}
                                             <div className={`text-sm leading-relaxed ${msg.role === 'user' ? 'text-white font-medium' : 'text-gray-800'}`}>
                                                 {msg.role === 'user' 
                                                     ? msg.content 
                                                     : <div dangerouslySetInnerHTML={{ __html: msg.content }} />
                                                 }
                                             </div>
-                                            {/* ------------------------------- */}
 
+                                            {/* Di sinilah visual akan dirender */}
                                             {msg.visual && msg.visual}
                                         </div>
                                         {msg.role === 'user' && (
